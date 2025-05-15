@@ -83,7 +83,7 @@ public extension ChatView where MessageContent == EmptyView, InputViewContent ==
 
 public extension ChatView where InputViewContent == EmptyView, MenuAction == DefaultMessageMenuAction {
 
-    init(messages: [Message],
+    init(messages: [Message], 
          chatType: ChatType = .conversation,
          replyMode: ReplyMode = .quote,
          didSendMessage: @escaping (DraftMessage) -> Void,

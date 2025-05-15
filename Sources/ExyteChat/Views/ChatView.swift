@@ -513,7 +513,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
     }
     
     private func isGiphyAvailable() -> Bool {
-        return availableInputs.contains(AvailableInputType.giphy)
+        return false// availableInputs.contains(AvailableInputType.giphy)
     }
     
     private static func createLocalization() -> ChatLocalization {

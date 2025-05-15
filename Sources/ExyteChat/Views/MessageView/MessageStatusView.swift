@@ -15,6 +15,7 @@ struct MessageStatusView: View {
         Group {
             switch status {
             case .sending:
+                
                 theme.images.message.sending
                     .resizable()
                     .rotationEffect(.degrees(90))
@@ -38,6 +39,52 @@ struct MessageStatusView: View {
             }
         }
         .viewSize(MessageView.statusViewSize)
+        .padding(.trailing, MessageView.horizontalStatusPadding)
+    }
+
+    @MainActor
+        private func getTheme() -> ChatTheme {
+            return theme
+        }
+}
+////                Text("Seen").font(.caption).foregroundStyle(.gray)
+
+struct MessageStatusViewNew: View {
+
+    @Environment(\.chatTheme) private var theme
+
+    let status: Message.Status
+    let onRetry: () -> Void
+
+    var body: some View {
+        Group {
+            switch status {
+            case .sending:
+                Text("Sending").font(.caption).foregroundStyle(.gray)
+                    .frame(alignment: .trailing)
+            case .sent:
+                VStack(alignment:.trailing){
+                  
+                    Text("Sent").font(.caption).foregroundStyle(.gray)
+                }
+            case .read:
+                HStack{
+                    Spacer()
+                    Text("Seen").font(.caption).foregroundStyle(.gray)
+                }
+              
+                  
+            case .error:
+                Button {
+                    onRetry()
+                } label: {
+                    Text("Retry").font(.caption).foregroundStyle(.gray)
+                        .frame(alignment: .trailing)
+                }
+                .foregroundColor(theme.colors.statusError)
+            }
+        }
+       
         .padding(.trailing, MessageView.horizontalStatusPadding)
     }
 

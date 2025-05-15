@@ -83,7 +83,7 @@ struct MessageView: View {
     var showAvatar: Bool {
         isDisplayingMessageMenu
         || positionInUserGroup == .single
-        || (chatType == .conversation && positionInUserGroup == .last)
+      //  || (chatType == .conversation && positionInUserGroup == .last)
         || (chatType == .comments && positionInUserGroup == .first)
     }
 
@@ -117,15 +117,8 @@ struct MessageView: View {
 
                 bubbleView(message)
             }
-
-            if message.user.isCurrentUser, let status = message.status {
-                MessageStatusView(status: status) {
-                    if case let .error(draft) = status {
-                        viewModel.sendMessage(draft)
-                    }
-                }
-                .sizeGetter($statusSize)
-            }
+     
+        
         }
         .padding(.top, topPadding)
         .padding(.bottom, bottomPadding)
@@ -144,33 +137,48 @@ struct MessageView: View {
                 reactionsView(message)
                     .zIndex(1)
             }
-            
-            VStack(alignment: .leading, spacing: 0) {
-                
-                if let giphyMediaId = message.giphyMediaId {
-                    giphyView(giphyMediaId)
-                }
-                
-                if !message.attachments.isEmpty {
-                    attachmentsView(message)
-                }
-                
-                if !message.text.isEmpty {
-                    textWithTimeView(message)
-                        .font(Font(font))
-                }
-                
-                if let recording = message.recording {
-                    VStack(alignment: .trailing, spacing: 8) {
-                        recordingView(recording)
-                        messageTimeView()
-                            .padding(.bottom, 8)
-                            .padding(.trailing, 12)
+            VStack (spacing: 0){
+                VStack(alignment: .leading, spacing: 0) {
+                    
+                    if let giphyMediaId = message.giphyMediaId {
+                        giphyView(giphyMediaId)
+                    }
+                    
+                    if !message.attachments.isEmpty {
+                        attachmentsView(message)
+                    }
+                    
+                    if !message.text.isEmpty {
+                        textWithTimeView(message)
+                            .font(Font(font))
+                    }
+                    
+                    if let recording = message.recording {
+                        VStack(alignment: .trailing, spacing: 8) {
+                            recordingView(recording)
+                            messageTimeView()
+                                .padding(.bottom, 8)
+                                .padding(.trailing, 12)
+                        }
                     }
                 }
+                .bubbleBackground(message, theme: theme)
+                .zIndex(0)
+                
+//                if(positionInMessagesSection == .last){
+//                    if message.user.isCurrentUser, let status = message.status {
+//                        MessageStatusViewNew(status: status) {
+//                            if case let .error(draft) = status {
+//                                viewModel.sendMessage(draft)
+//                            }
+//                        }
+//                        .sizeGetter($statusSize)
+//                    }
+//                }
+
+                
             }
-            .bubbleBackground(message, theme: theme)
-            .zIndex(0)
+          
         }
         .applyIf(isDisplayingMessageMenu) {
             $0.frameGetter($viewModel.messageFrame)
@@ -218,10 +226,10 @@ struct MessageView: View {
                         tapAvatarClosure?(message.user, message.id)
                     }
             } else {
-                Color.clear.viewSize(avatarSize)
+                Color.clear.viewSize(4)
             }
         }
-        .padding(.horizontal, MessageView.horizontalAvatarPadding)
+        .padding(.horizontal, showAvatar ?  MessageView.horizontalAvatarPadding:3)
         .sizeGetter($avatarViewSize)
     }
 
@@ -320,7 +328,7 @@ extension View {
 
     @ViewBuilder
     func bubbleBackground(_ message: Message, theme: ChatTheme, isReply: Bool = false) -> some View {
-        let radius: CGFloat = !message.attachments.isEmpty ? 12 : 20
+        let radius: CGFloat = !message.attachments.isEmpty ? 10 : 10
         let additionalMediaInset: CGFloat = message.attachments.count > 1 ? 2 : 0
         self
             .frame(width: message.attachments.isEmpty ? nil : MessageView.widthWithMedia + additionalMediaInset)
@@ -343,7 +351,7 @@ struct MessageView_Preview: PreviewProvider {
 
     static private var extraShortText = "Sss"
     static private var shortText = "Hi, buddy!"
-    static private var longText = "Hello hello hello hello hello hello hello hello hello hello hello hello hello\n hello hello hello hello d d d d d d d d"
+    static private var longText = "Hello hello he d d d"
 
     static private var replyedMessage = Message(
         id: UUID().uuidString,

@@ -588,7 +588,7 @@ struct InputView: View {
     }
     
     private func isGiphyAvailable() -> Bool {
-        return availableInputs.contains(AvailableInputType.giphy)
+        return false// availableInputs.contains(AvailableInputType.giphy)
     }
     
     private func isMediaAvailable() -> Bool {
